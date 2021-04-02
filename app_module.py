@@ -39,9 +39,21 @@ def start():
 
                 msg="cmd:send,src:App,dst:log,status:"+status+",msg:\"log: " + current_time + " "+ current_date+ ",Open"
                 app.send(bytes(msg,FORMAT))
+            
+            elif(command[-1]=="Close"):
+                subprocess.call("close.bat")
+                num = random.randrange(1,4)
+                if(num==1 or num==2):
+                    status="processed"
+                elif(num == 3):
+                    status="busy"
+                else:
+                    status="Error"
 
+                msg="cmd:send,src:App,dst:log,status:"+status+",msg:\"log: " + current_time + " "+ current_date+ ",Close"
+                app.send(bytes(msg,FORMAT))
         else:
             subprocess.call("close.bat")
-            msg="cmd:send,src:App,dst:log,status:Error,msg:\"log: " + current_time + " "+ current_date+ ",Error close app"
+            msg="cmd:send,src:App,dst:log,status:Error,msg:\"log: " + current_time + " "+ current_date+ ",Error"
             app.send(bytes(msg,FORMAT))
 
