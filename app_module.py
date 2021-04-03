@@ -10,6 +10,7 @@ HEADER = 1024
 PORT = 5050
 FORMAT = 'utf-8'
 SERVER = socket.gethostbyname(socket.gethostname())
+print(SERVER)
 ADDR = (SERVER,PORT)
 
 app = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
