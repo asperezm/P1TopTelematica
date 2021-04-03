@@ -17,14 +17,20 @@ gui.connect(ADDR)
 
 
 def start():
+
+    current_time = "67328"
+    current_date = "3768232"
     
     msg="Gui"
     gui.send(msg.encode(FORMAT))
+
+
     sg.theme('LightGrey6')
     print('Starting up...')
 
-    #msg="cmd:send,src:Gui,dst:Log,status:"+"none"+",msg:\"log: " + "124312" + " "+ "030421"+ ",Info"
-    #gui.send(msg.encode(FORMAT))
+
+
+    files3 = ['andru', 'Escutarde']
 
     sg.ChangeLookAndFeel('LightGreen')      # set the overall color scheme
     column1=[   [sg.Text('Orgullo OS lleva corriendo::', font='Any 12'),sg.Text('', size=(30,1), key='_DATE_')],
@@ -40,7 +46,7 @@ def start():
             ]
 
     frame_layout = [
-                    [sg.Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3','Listbox 4','Listbox 5'), size=(50,16), enable_events=True, key='_LIST_')]
+                    [sg.Listbox(values=(files3), size=(50,16), enable_events=True, key='_LIST_')]
                 ]
 
 
@@ -48,7 +54,7 @@ def start():
                 [sg.Text('Gestionar módulo carpetas', size=(50,1), justification='center')],
                 [sg.HorizontalSeparator(pad=None)],
                 [sg.Frame('root', frame_layout, font='Any 12', title_color='blue')],
-                [sg.Button('Eliminar', button_color=('white', '#e04646'), key='-DELDIR-', font=('Any 15'))],
+                [sg.Button('Eliminar', button_color=('white', '#e04646'), font=('Any 15')), sg.Button('Actualizar', button_color=('white', 'black'), font=('Any 15'))],
                 [sg.Text('Crear directorio', size=(50,2), justification='center')],
                 [sg.HorizontalSeparator(pad=None)],
                 [sg.Text('Ingrese el nombre del directorio', size=(50,1))],
@@ -58,7 +64,7 @@ def start():
 
 
     # The GUI layout
-    layout =  [ 
+    layout =  [
                     [sg.Column(column1, size=(500,700)), VerticalSeparator(pad=None), sg.Column(column2, size=(500,700))],
 
             ]
@@ -69,32 +75,45 @@ def start():
     start_time = datetime.datetime.now()
     #  The "Event loop" where all events are read and processed (button clicks, etc)
     while True:
-
+        current_time = "67328"
+        current_date = "3768232"
         event, values = window.Read(timeout=10)     # read with a timeout of 10 ms
         if event != sg.TIMEOUT_KEY:                 # if got a real event, print the info
-            print(values)
+            pass
         if event in (None, 'Exit'):
             break
-            
+
         if event == 'Calc':
-            msg="cmd:send,src:Gui,dst:App,status:"+"none"+",msg:\"log: " + "124312" + " "+ "030421"+ ",Open"
+            msg="cmd:send,src:Gui,dst:App,status:"+"none"+",msg:\"log: " + current_time + " "+ current_date + ",Open"
             print("[MESSAGE] - "+msg)
             gui.send(bytes(msg,FORMAT))
 
         if event == 'Close all':
-            msg="cmd:send,src:Gui,dst:App,status:"+"none"+",msg:\"log: " + "124312" + " "+ "030421"+ ",Close"
+            msg="cmd:send,src:Gui,dst:App,status:"+"none"+",msg:\"log: " + current_time + " "+ current_date + ",Close"
             print("[MESSAGE] - "+msg)
             gui.send(bytes(msg,FORMAT))
 
         if event == 'Crear':
             namedir = values['-DIRNAME-']
-            msg="cmd:send,src:Gui,dst:Log,status:"+"none"+",msg:\"log: " + "124312" + " "+ "030421"+ ",Create {namedir}"
-    
+            msg="cmd:send,src:Gui,dst:Log,status:"+"processed"+",msg:\"log: " + current_time + " "+ current_date + ",Create "+namedir
+            print("[MESSAGE] - "+msg)
+            gui.send(bytes(msg,FORMAT))
+
+        if event == 'Actualizar':
+            # msg="cmd:send,src:Gui,dst:Log,status:"+"none"+",msg:\"log: " + current_time + " "+ current_date + ",Info"
+
+            # gui.send(msg.encode(FORMAT))
+
+            # files = gui.recv(HEADER).decode(FORMAT)
+            # files2 = files.split(',')
+            # files3 = files2[-1].split()
+            files3 = ["noquiero","seguirtrabajando"]
+            window.Element('_LIST_').update(values=(files3))
 
 
         # Output the "uptime" statistic to a text field in the window
         window.Element('_DATE_').Update(str(datetime.datetime.now()-start_time))
-        window.Element('_LIST_').update()
+
 
     # Exiting the program
     window.Close()    # be sure and close the window before trying to exit the program

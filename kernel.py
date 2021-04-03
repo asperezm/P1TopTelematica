@@ -25,7 +25,7 @@ def handle_client(conn, addr):
     while connected:
         try:
             msg = conn.recv(HEADER).decode(FORMAT)
-            print(msg)
+            print("soy el kernel: "+msg)
         except:
             pass
         
@@ -34,7 +34,6 @@ def handle_client(conn, addr):
             if msg.startswith("App") and App == False:
                 App=True
                 print("APP CONNECTED")
-                print(msg)
                 connection["App"] = conn
             elif msg.startswith("Gui") and GUI== False:
                 GUI=True

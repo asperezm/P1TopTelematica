@@ -51,6 +51,6 @@ def start():
             file.send(msg_files.encode(FORMAT))
             
         
-
+start()
 
     
