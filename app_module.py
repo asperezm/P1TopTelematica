@@ -37,7 +37,7 @@ def start():
                 else:
                     status="Error"
 
-                msg="cmd:send,src:App,dst:log,status:"+status+",msg:\"log: " + current_time + " "+ current_date+ ",Open"
+                msg="cmd:send,src:App,dst:Log,status:"+status+",msg:\"log: " + current_time + " "+ current_date+ ",Open"
                 app.send(bytes(msg,FORMAT))
             
             elif(command[-1]=="Close"):
@@ -50,10 +50,10 @@ def start():
                 else:
                     status="Error"
 
-                msg="cmd:send,src:App,dst:log,status:"+status+",msg:\"log: " + current_time + " "+ current_date+ ",Close"
+                msg="cmd:send,src:App,dst:Log,status:"+status+",msg:\"log: " + current_time + " "+ current_date+ ",Close"
                 app.send(bytes(msg,FORMAT))
         else:
             subprocess.call("close.bat")
-            msg="cmd:send,src:App,dst:log,status:Error,msg:\"log: " + current_time + " "+ current_date+ ",Error"
+            msg="cmd:send,src:App,dst:Log,status:Error,msg:\"log: " + current_time + " "+ current_date+ ",Error"
             app.send(bytes(msg,FORMAT))
 
