@@ -34,6 +34,7 @@ def handle_client(conn, addr):
             if msg.startswith("App") and App == False:
                 App=True
                 print("APP CONNECTED")
+                print(msg)
                 connection["App"] = conn
             elif msg.startswith("Gui") and GUI== False:
                 GUI=True

@@ -15,7 +15,6 @@ ADDR = (SERVER,PORT)
 
 app = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 app.connect(ADDR)
-
 def start():
     msg="App"
     current_time = datetime.now().strftime("%H:%M:%S")
@@ -57,4 +56,6 @@ def start():
             subprocess.call("close.bat")
             msg="cmd:send,src:App,dst:Log,status:Error,msg:\"log: " + current_time + " "+ current_date+ ",Error"
             app.send(bytes(msg,FORMAT))
+
+start()
 
