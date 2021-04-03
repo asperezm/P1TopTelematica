@@ -15,7 +15,7 @@ server.bind(ADDR)
 
 App = False
 GUI = False
-Log = True
+Log = False
 connection = {}
 
 def handle_client(conn, addr):
