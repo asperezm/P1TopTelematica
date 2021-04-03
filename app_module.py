@@ -15,6 +15,7 @@ ADDR = (SERVER,PORT)
 
 app = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 app.connect(ADDR)
+
 def start():
     msg="App"
     current_time = datetime.now().strftime("%H:%M:%S")

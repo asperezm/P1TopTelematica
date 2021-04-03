@@ -1,6 +1,4 @@
 #Revisar __init__ para crear instancias de los módulos
-
-#import gui_module as gui_module
 import socket
 import threading
 import subprocess
@@ -17,7 +15,7 @@ server.bind(ADDR)
 
 App = False
 GUI = False
-Log = False
+Log = True
 connection = {}
 
 def handle_client(conn, addr):
@@ -27,8 +25,10 @@ def handle_client(conn, addr):
     while connected:
         try:
             msg = conn.recv(HEADER).decode(FORMAT)
+            print(msg)
         except:
-            print("ERROR NO MESAGGE")
+            pass
+        
 
         if App == False or GUI == False or Log== False:
             if msg.startswith("App") and App == False:
@@ -76,12 +76,13 @@ def handle_client(conn, addr):
                     dest = connection["Log"]
                     msg_send = msg.encode(FORMAT)
                     dest.send(msg_send)
+            
 
 def start():
     server.listen()
     subprocess.call("start.bat")
     print(f"server is listenning on {HOST}")
-
+    
     while True:
         conn, addr = server.accept()
         thread = threading.Thread(target=handle_client, args=(conn, addr))
