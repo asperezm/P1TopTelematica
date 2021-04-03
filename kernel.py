@@ -1,5 +1,6 @@
 #Revisar __init__ para crear instancias de los módulos
-import gui_module as gui_module
+
+#import gui_module as gui_module
 import socket
 import threading
 import subprocess
