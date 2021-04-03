@@ -5,6 +5,7 @@ import subprocess
 import random
 import time
 
+# socket config
 HEADER = 1024
 PORT = 5050
 FORMAT = "utf-8"
@@ -30,7 +31,7 @@ def handle_client(conn, addr):
             pass
         
 
-        if App == False or GUI == False or Log== False:
+        if App == False or GUI == False or Log == False:
             if msg.startswith("App") and App == False:
                 App=True
                 print("APP CONNECTED")
