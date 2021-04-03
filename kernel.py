@@ -1,5 +1,5 @@
 #Revisar __init__ para crear instancias de los módulos
-import gui as sg
+import gui_module as gui_module
 import socket
 import threading
 import subprocess
@@ -33,15 +33,15 @@ def handle_client(conn, addr):
             if msg.startswith("App") and App == False:
                 App=True
                 print("APP CONNECTED")
-                connection["App"]= conn
+                connection["App"] = conn
             elif msg.startswith("Gui") and GUI== False:
                 GUI=True
                 print("GUI CONNECTED")
-                connection["Gui"]= conn
+                connection["Gui"] = conn
             elif msg.startswith("Log") and Log==False:
                 Log=True
                 print("LOGS CONNECTED")
-                connection["Log"]= conn
+                connection["Log"] = conn
         
         else:
             command = msg.split(',')
