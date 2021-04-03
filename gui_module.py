@@ -17,11 +17,14 @@ gui.connect(ADDR)
 
 
 def start():
+    
     msg="Gui"
     gui.send(msg.encode(FORMAT))
     sg.theme('LightGrey6')
     print('Starting up...')
 
+    #msg="cmd:send,src:Gui,dst:Log,status:"+"none"+",msg:\"log: " + "124312" + " "+ "030421"+ ",Info"
+    #gui.send(msg.encode(FORMAT))
 
     sg.ChangeLookAndFeel('LightGreen')      # set the overall color scheme
     column1=[   [sg.Text('Orgullo OS lleva corriendo::', font='Any 12'),sg.Text('', size=(30,1), key='_DATE_')],
@@ -31,11 +34,12 @@ def start():
                 [sg.HorizontalSeparator(pad=None)],
                 [sg.Text('Log de transacciones', size=(50,2))],
                 [sg.Output(size=(50,16))],
-                [sg.Button('Apagar sistema', button_color=('white', '#e04646'), key='Exit')],
+                [sg.Text('', size=(50,6))],
+                [sg.HorizontalSeparator(pad=None)],
+                [sg.Button('Apagar sistema', button_color=('white', '#e04646'), key='Exit')]
             ]
 
     frame_layout = [
-                    
                     [sg.Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3','Listbox 4','Listbox 5'), size=(50,16), enable_events=True, key='_LIST_')]
                 ]
 
@@ -44,7 +48,12 @@ def start():
                 [sg.Text('Gestionar módulo carpetas', size=(50,1), justification='center')],
                 [sg.HorizontalSeparator(pad=None)],
                 [sg.Frame('root', frame_layout, font='Any 12', title_color='blue')],
-                [sg.Submit(), sg.Cancel()]
+                [sg.Button('Eliminar', button_color=('white', '#e04646'), key='-DELDIR-', font=('Any 15'))],
+                [sg.Text('Crear directorio', size=(50,2), justification='center')],
+                [sg.HorizontalSeparator(pad=None)],
+                [sg.Text('Ingrese el nombre del directorio', size=(50,1))],
+                [sg.Input(key='-DIRNAME-', size=(50,1), tooltip='Nombre del directiorio')],
+                [sg.Button('Crear', font=('Any 15'), button_color=('white', '#3f56d1'))]
             ]
 
 
@@ -60,13 +69,14 @@ def start():
     start_time = datetime.datetime.now()
     #  The "Event loop" where all events are read and processed (button clicks, etc)
     while True:
+
         event, values = window.Read(timeout=10)     # read with a timeout of 10 ms
         if event != sg.TIMEOUT_KEY:                 # if got a real event, print the info
-            pass
+            print(values)
         if event in (None, 'Exit'):
             break
-        if event == 'Calc':
             
+        if event == 'Calc':
             msg="cmd:send,src:Gui,dst:App,status:"+"none"+",msg:\"log: " + "124312" + " "+ "030421"+ ",Open"
             print("[MESSAGE] - "+msg)
             gui.send(bytes(msg,FORMAT))
@@ -76,9 +86,15 @@ def start():
             print("[MESSAGE] - "+msg)
             gui.send(bytes(msg,FORMAT))
 
+        if event == 'Crear':
+            namedir = values['-DIRNAME-']
+            msg="cmd:send,src:Gui,dst:Log,status:"+"none"+",msg:\"log: " + "124312" + " "+ "030421"+ ",Create {namedir}"
+    
+
 
         # Output the "uptime" statistic to a text field in the window
         window.Element('_DATE_').Update(str(datetime.datetime.now()-start_time))
+        window.Element('_LIST_').update()
 
     # Exiting the program
     window.Close()    # be sure and close the window before trying to exit the program
