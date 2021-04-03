@@ -15,7 +15,7 @@ server.bind(ADDR)
 
 App = False
 GUI = False
-Log = True
+Log = False
 connection = {}
 
 def handle_client(conn, addr):
@@ -50,6 +50,10 @@ def handle_client(conn, addr):
             if(command[3]=="status:processed"):
                 if(command[2]=="dst:App"):
                     dest = connection["App"]
+                    msg_send = msg.encode(FORMAT)
+                    dest.send(msg_send)
+                elif(command[2]=="dst:Gui"):
+                    dest = connection["Gui"]
                     msg_send = msg.encode(FORMAT)
                     dest.send(msg_send)
                 else:
