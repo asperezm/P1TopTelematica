@@ -52,6 +52,10 @@ def handle_client(conn, addr):
                     dest = connection["App"]
                     msg_send = msg.encode(FORMAT)
                     dest.send(msg_send)
+                elif(command[2]=="dst:Gui"):
+                    dest = connection["Gui"]
+                    msg_send = msg.encode(FORMAT)
+                    dest.send(msg_send)
                 else:
                     dest = connection["Log"]
                     msg_send = msg.encode(FORMAT)
