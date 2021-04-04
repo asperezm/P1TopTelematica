@@ -1,4 +1,3 @@
-# https://realpython.com/pysimplegui-python/#getting-started-with-pysimplegui
 import PySimpleGUI as sg
 import socket
 import os
@@ -32,7 +31,8 @@ def start():
     
 
     sg.ChangeLookAndFeel('LightGreen')      # set the overall color scheme
-    column1=[   [sg.Text('Orgullo OS lleva corriendo::', font='Any 12'),sg.Text('', size=(30,1), key='_DATE_')],
+    column1 = [ 
+                [sg.Text('Orgullo OS lleva corriendo::', font='Any 12'),sg.Text('', size=(30,1), key='_DATE_')],
                 [sg.Text('Gestionar módulo aplicaciones', size=(50,2), justification='center')],
                 [sg.Button('Calc', font=('Any 15'), button_color=('white','#3eb548')),sg.Button('Close', font=('Any 15'), button_color=('white', '#3f56d1')), sg.Button('Close all', font=('Any 15'), button_color=('white', '#e04646'))],
                 [sg.Text('', size=(50,1), justification='center')],
@@ -47,12 +47,13 @@ def start():
                 [sg.Button('Apagar sistema', button_color=('white', '#e04646'), key='Exit')]
             ]
 
+    
     frame_layout = [
                     [sg.Listbox(values=(files3), size=(50,16), enable_events=True, key='-LIST-')]
                 ]
 
 
-    column2=[
+    column2 = [
                 [sg.Text('Gestionar módulo carpetas', size=(50,1), justification='center')],
                 [sg.HorizontalSeparator(pad=None)],
                 [sg.Frame('root', frame_layout, font='Any 12', title_color='blue')],
@@ -85,6 +86,7 @@ def start():
         event, values = window.Read(timeout=10)     # read with a timeout of 10 ms
         if event != sg.TIMEOUT_KEY:                 # if got a real event, print the info
             pass
+        
         if event in (None, 'Exit'):
             break
 
