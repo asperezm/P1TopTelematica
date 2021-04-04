@@ -16,7 +16,7 @@ server.bind(ADDR)
 
 App = False
 GUI = False
-Log = True
+Log = False
 connection = {}
 
 def handle_client(conn, addr):
@@ -26,7 +26,7 @@ def handle_client(conn, addr):
     while connected:
         try:
             msg = conn.recv(HEADER).decode(FORMAT)
-            print(msg)
+            print("soy el kernel: "+msg)
         except:
             pass
         
@@ -35,7 +35,6 @@ def handle_client(conn, addr):
             if msg.startswith("App") and App == False:
                 App=True
                 print("APP CONNECTED")
-                print(msg)
                 connection["App"] = conn
             elif msg.startswith("Gui") and GUI== False:
                 GUI=True
@@ -51,6 +50,10 @@ def handle_client(conn, addr):
             if(command[3]=="status:processed"):
                 if(command[2]=="dst:App"):
                     dest = connection["App"]
+                    msg_send = msg.encode(FORMAT)
+                    dest.send(msg_send)
+                elif(command[2]=="dst:Gui"):
+                    dest = connection["Gui"]
                     msg_send = msg.encode(FORMAT)
                     dest.send(msg_send)
                 else:
