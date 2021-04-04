@@ -7,7 +7,7 @@ waf-*-*/
 waf3-*-*/
 # Lockfile
 .lock-waf_*_build
-
+log_text.txt
 __pycache__/
 *.py[cod]
 

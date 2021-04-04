@@ -4,6 +4,7 @@ import socket
 import datetime
 import os
 from PySimpleGUI.PySimpleGUI import VerticalSeparator
+import time
 
 #Connection
 HEADER = 1024
@@ -20,7 +21,10 @@ def start():
 
     current_time = "67328"
     current_date = "3768232"
-    
+
+
+
+
     msg="Gui"
     gui.send(msg.encode(FORMAT))
 
@@ -28,9 +32,9 @@ def start():
     sg.theme('LightGrey6')
     print('Starting up...')
 
-
-
-    files3 = ['andru', 'Escutarde']
+    files3 = [" "]
+    
+    
 
     sg.ChangeLookAndFeel('LightGreen')      # set the overall color scheme
     column1=[   [sg.Text('Orgullo OS lleva corriendo::', font='Any 12'),sg.Text('', size=(30,1), key='_DATE_')],
@@ -46,7 +50,7 @@ def start():
             ]
 
     frame_layout = [
-                    [sg.Listbox(values=(files3), size=(50,16), enable_events=True, key='_LIST_')]
+                    [sg.Listbox(values=(files3), size=(50,16), enable_events=True, key='-LIST-')]
                 ]
 
 
@@ -73,8 +77,11 @@ def start():
     window = sg.Window('Orgullo OS', layout=layout, default_element_size=(12,1),font='Any 12')
 
     start_time = datetime.datetime.now()
+
+    
     #  The "Event loop" where all events are read and processed (button clicks, etc)
     while True:
+
         current_time = "67328"
         current_date = "3768232"
         event, values = window.Read(timeout=10)     # read with a timeout of 10 ms
@@ -93,24 +100,30 @@ def start():
             print("[MESSAGE] - "+msg)
             gui.send(bytes(msg,FORMAT))
 
+        if event == 'Actualizar':
+            msg="cmd:send,src:Gui,dst:Log,status:"+"none"+",msg:\"log: " + current_time + " "+ current_date + ",Info"
+            gui.send(msg.encode(FORMAT))
+            files = gui.recv(HEADER).decode(FORMAT)
+            files2 = files.split(',')
+            files3 = files2[-1].split()
+            print("[MESSAGE] - "+msg)
+            window.Element('-LIST-').update(values=(files3))
+
         if event == 'Crear':
             namedir = values['-DIRNAME-']
             msg="cmd:send,src:Gui,dst:Log,status:"+"processed"+",msg:\"log: " + current_time + " "+ current_date + ",Create "+namedir
             print("[MESSAGE] - "+msg)
             gui.send(bytes(msg,FORMAT))
+            window.Element('-LIST-').update(values=(files3))
 
-        if event == 'Actualizar':
-            # msg="cmd:send,src:Gui,dst:Log,status:"+"none"+",msg:\"log: " + current_time + " "+ current_date + ",Info"
+        if event == 'Eliminar':
+            namedir = values['-LIST-']
+            msg="cmd:send,src:Gui,dst:Log,status:"+"processed"+",msg:\"log: " + current_time + " "+ current_date + ",Delete "+namedir[0]
+            gui.send(msg.encode(FORMAT))
+            print("[MESSAGE] - "+msg)
+            window.Element('-LIST-').update(values=(files3))
 
-            # gui.send(msg.encode(FORMAT))
-
-            # files = gui.recv(HEADER).decode(FORMAT)
-            # files2 = files.split(',')
-            # files3 = files2[-1].split()
-            files3 = ["noquiero","seguirtrabajando"]
-            window.Element('_LIST_').update(values=(files3))
-
-
+        
         # Output the "uptime" statistic to a text field in the window
         window.Element('_DATE_').Update(str(datetime.datetime.now()-start_time))
 
