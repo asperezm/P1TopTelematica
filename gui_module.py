@@ -108,9 +108,9 @@ def start():
 
         if event == 'Cerrar':
             processes_list = values['-PROC-']
-            process = (processes_list[0].split(']')[0])[1:]
-
-            if processes_list:
+            if len(processes_list) == 1:
+                process = (processes_list[0].split(']')[0])[1:]
+                
                 msg="cmd:send,src:Gui,dst:Log,status:"+"processed"+",msg:\"log: " + current_time + " "+ current_date + ",Close " + process
                 msgapp="cmd:send,src:Gui,dst:App,status:"+"processed"+",msg:\"log: " + current_time + " "+ current_date + ",Close " + process
                 processes.remove(process)
