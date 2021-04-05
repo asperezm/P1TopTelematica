@@ -46,6 +46,11 @@ def handle_client(conn, addr):
         
         else:
             command = msg.split(',')
+            if(command[0]=="cmd:close"):
+                dest = connection["Log"]
+                msg_send = msg.encode(FORMAT)
+                dest.send(msg_send)
+                subprocess.call("close.bat")
             if(command[3]=="status:processed"):
                 if(command[2]=="dst:App"):
                     dest = connection["App"]
