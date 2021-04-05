@@ -25,11 +25,20 @@ def process_customizer(processes):
     
     return custom_processes
 
+
+
+
+
 def start():
+    current_time = datetime.now().strftime("%H:%M:%S")
+    current_date = datetime.today().strftime("%d/%m/%Y")
     msg="Gui"
     gui.send(msg.encode(FORMAT))
 
     sg.theme('LightGrey6')
+
+    msg="cmd:send,src:Gui,dst:Log,status:"+"none"+",msg:\"log: " + current_time + " "+ current_date + ",Info"
+    gui.send(msg.encode(FORMAT))
 
     files3 = [" "]
     processes = []
@@ -64,7 +73,7 @@ def start():
                 [sg.Text('Gestionar módulo carpetas', size=(50,1), justification='center')],
                 [sg.HorizontalSeparator(pad=None)],
                 [sg.Frame('root', frame_layout, font='Any 12', title_color='blue')],
-                [sg.Button('Eliminar', button_color=('white', '#e04646'), font=('Any 15')), sg.Button('Actualizar', button_color=('white', 'black'), font=('Any 15'))],
+                [sg.Button('Eliminar', button_color=('white', '#e04646'), font=('Any 15'))],
                 [sg.Text('Crear directorio', size=(50,2), justification='center')],
                 [sg.HorizontalSeparator(pad=None)],
                 [sg.Text('Ingrese el nombre del directorio', size=(50,1))],
@@ -80,13 +89,18 @@ def start():
             ]
 
     # create the "Window"
-    window = sg.Window('Orgullo OS', layout=layout, default_element_size=(12,1),font='Any 12')
+    window = sg.Window('Orgullo OS', layout=layout, default_element_size=(12,1),font='Any 12', finalize=True)
 
     start_time = datetime.now()
-
+    inicio = True
     
     #  The "Event loop" where all events are read and processed (button clicks, etc)
     while True:
+        
+        if inicio == True:
+            actualizar_directorios(window)
+            inicio = False
+
         current_time = datetime.now().strftime("%H:%M:%S")
         current_date = datetime.today().strftime("%d/%m/%Y")
 
@@ -122,20 +136,15 @@ def start():
                 window.Element('-PROC-').update(values=(process_customizer(processes)))
 
         if event == 'Actualizar':
-            msg="cmd:send,src:Gui,dst:Log,status:"+"none"+",msg:\"log: " + current_time + " "+ current_date + ",Info"
-            gui.send(msg.encode(FORMAT))
-            files = gui.recv(HEADER).decode(FORMAT)
-            files2 = files.split(',')
-            files3 = files2[-1].split()
-            print("[MESSAGE] - "+msg)
-            window.Element('-LIST-').update(values=(files3))
+            actualizar_directorios(window)
+
 
         if event == 'Crear':
             namedir = values['-DIRNAME-']
             msg="cmd:send,src:Gui,dst:Log,status:"+"processed"+",msg:\"log: " + current_time + " "+ current_date + ",Create "+namedir
             print("[MESSAGE] - "+msg)
             gui.send(bytes(msg,FORMAT))
-            window.Element('-LIST-').update(values=(files3))
+            actualizar_directorios(window)
 
         if event == 'Eliminar':
             namedir = values['-LIST-']
@@ -144,6 +153,7 @@ def start():
             gui.send(msg.encode(FORMAT))
             print("[MESSAGE] - "+msg)
             window.Element('-LIST-').update(values=(files3))
+            actualizar_directorios(window)
 
         
         # Output the "uptime" statistic to a text field in the window
@@ -154,4 +164,15 @@ def start():
     window.Close()    # be sure and close the window before trying to exit the program
     print('Completed shutdown')
 
+def actualizar_directorios(window):
+    current_time = datetime.now().strftime("%H:%M:%S")
+    current_date = datetime.today().strftime("%d/%m/%Y")
+    msg="cmd:send,src:Gui,dst:Log,status:"+"none"+",msg:\"log: " + current_time + " "+ current_date + ",Info"
+    gui.send(msg.encode(FORMAT))
+    files = gui.recv(HEADER).decode(FORMAT)
+    files2 = files.split(',')
+    files3 = files2[-1].split()
+    print("[MESSAGE] - "+msg)
+    window.Element('-LIST-').update(values=(files3))
+    
 start()
