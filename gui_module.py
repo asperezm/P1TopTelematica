@@ -11,34 +11,42 @@ HEADER = 1024
 PORT = 5050
 FORMAT = 'utf-8'
 SERVER = socket.gethostbyname(socket.gethostname())
+print('GUI_MODULE')
 ADDR = (SERVER,PORT)
 
 gui = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 gui.connect(ADDR)
 
+def process_customizer(processes):
+    custom_processes = []
+    for process in processes:
+        s = "[{pid}] notepad.exe".format(pid = process)
+        custom_processes.append(s)
+    
+    return custom_processes
 
 def start():
-
     msg="Gui"
     gui.send(msg.encode(FORMAT))
 
-
     sg.theme('LightGrey6')
-    print('Starting up...')
 
     files3 = [" "]
+    processes = []
     
-    
-
     sg.ChangeLookAndFeel('LightGreen')      # set the overall color scheme
     column1 = [ 
                 [sg.Text('Orgullo OS lleva corriendo::', font='Any 12'),sg.Text('', size=(30,1), key='_DATE_')],
                 [sg.Text('Gestionar módulo aplicaciones', size=(50,2), justification='center')],
-                [sg.Button('Calc', font=('Any 15'), button_color=('white','#3eb548')),sg.Button('Close', font=('Any 15'), button_color=('white', '#3f56d1')), sg.Button('Close all', font=('Any 15'), button_color=('white', '#e04646'))],
+                [   
+                    sg.Button('Abrir', font=('Any 15'), button_color=('white','#3eb548')),
+                    sg.Button('Cerrar', font=('Any 15'), button_color=('white', '#3f56d1')), 
+                    sg.Button('Actualizar_proc', font=('Any 15'), button_color=('white', '#e04646'))
+                ],
                 [sg.Text('', size=(50,1), justification='center')],
                 [sg.HorizontalSeparator(pad=None)],
                 [sg.Text('Procesos', size=(50,1))],
-                [sg.Listbox(values=(["total","ome","gonorrea"]), size=(50,10), enable_events=True, key='-LISTOTA-')],
+                [sg.Listbox(values=(processes), size=(50,10), enable_events=True, key='-PROC-')],
                 [sg.HorizontalSeparator(pad=None)],
                 [sg.Text('Log de transacciones', size=(50,1))],
                 [sg.Output(size=(50,10))],
@@ -90,15 +98,30 @@ def start():
         if event in (None, 'Exit'):
             break
 
-        if event == 'Calc':
+        if event == 'Abrir':
             msg="cmd:send,src:Gui,dst:App,status:"+"none"+",msg:\"log: " + current_time + " "+ current_date + ",Open"
             print("[MESSAGE] - "+msg)
             gui.send(bytes(msg,FORMAT))
+            p = gui.recv(HEADER).decode(FORMAT)
+            pid = (p.split(',')[-1]).split()[-1]
+            processes.append(pid)
+            window.Element('-PROC-').update(values=(process_customizer(processes)))
 
-        if event == 'Close all':
-            msg="cmd:send,src:Gui,dst:App,status:"+"none"+",msg:\"log: " + current_time + " "+ current_date + ",Close"
-            print("[MESSAGE] - "+msg)
-            gui.send(bytes(msg,FORMAT))
+        if event == 'Cerrar':
+            processes_list = values['-PROC-']
+            process = (processes_list[0].split(']')[0])[1:]
+
+            if processes_list:
+                msg="cmd:send,src:Gui,dst:Log,status:"+"processed"+",msg:\"log: " + current_time + " "+ current_date + ",Close " + process
+                msgapp="cmd:send,src:Gui,dst:App,status:"+"processed"+",msg:\"log: " + current_time + " "+ current_date + ",Close " + process
+                processes.remove(process)
+                gui.send(msg.encode(FORMAT))
+                gui.send(msgapp.encode(FORMAT))
+                print("[MESSAGE] close process - "+msg)
+                window.Element('-PROC-').update(values=(process_customizer(processes)))
+
+        if event == 'Actualizar_proc':
+            window.Element('-PROC-').update(values=(process_customizer(processes)))
 
         if event == 'Actualizar':
             msg="cmd:send,src:Gui,dst:Log,status:"+"none"+",msg:\"log: " + current_time + " "+ current_date + ",Info"
@@ -118,6 +141,7 @@ def start():
 
         if event == 'Eliminar':
             namedir = values['-LIST-']
+            print(namedir)
             msg="cmd:send,src:Gui,dst:Log,status:"+"processed"+",msg:\"log: " + current_time + " "+ current_date + ",Delete "+namedir[0]
             gui.send(msg.encode(FORMAT))
             print("[MESSAGE] - "+msg)

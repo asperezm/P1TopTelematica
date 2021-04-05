@@ -7,7 +7,7 @@ HEADER = 1024
 PORT = 5050
 FORMAT = 'utf-8'
 SERVER = socket.gethostbyname(socket.gethostname())
-print(SERVER)
+print('FILE_MODULE')
 ADDR = (SERVER,PORT)
 
 file = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -24,23 +24,27 @@ def start():
     current_time = datetime.now().strftime("%H:%M:%S")
     current_date = datetime.today().strftime("%d/%m/%Y")
     connection = True
+
     while connection:
         msg = file.recv(HEADER).decode(FORMAT)
         write_log(msg)
         command = msg.split(',')
         command2 = command[-1].split()
+
         if(command2[0] == "Create"):
             new_bucket = os.getcwd() + f'/{command2[-1] }'
             try:
                 os.mkdir(new_bucket)
             except OSError:
                 print("Error create folder")
+
         elif(command2[0] == "Delete"):
             bucket = os.getcwd() + f'/{command2[-1] }'
             try:
                 os.rmdir(bucket)
             except OSError:
                 print("Delete file")
+                
         elif(command[-1]=="Info"):
             bucket1 = os.listdir(os.getcwd())
             bucketname = ""
