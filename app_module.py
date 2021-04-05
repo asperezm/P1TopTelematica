@@ -30,7 +30,7 @@ def start():
         
         if(command[3]!="status:Error"):
             if(command[-1]=="Open"):
-                num = random.randrange(1,4)
+                num = random.randrange(1,3)
                 if(num==1 or num==2):
                     status="processed"
                 elif(num == 3):
@@ -41,27 +41,32 @@ def start():
                     pid = str(process.pid)
                     msg_log="cmd:send,src:App,dst:Log,status:"+status+",msg:\"log: " + current_time + " "+ current_date+ ",Opened " + pid
                     msg_gui="cmd:send,src:App,dst:Gui,status:"+status+",msg:\"log: " + current_time + " "+ current_date+ ",Opened " + pid
-                    app.send(bytes(msg_log,FORMAT))
-                    app.send(bytes(msg_gui,FORMAT))
                 except Exception as e:
-                    msg_log="cmd:send,src:App,dst:Log,status:Error->" + str(e) + ",msg:\"log: " + current_time + " "+ current_date
-                    app.send(bytes(msg_log,FORMAT))
+                    msg_log="cmd:send,src:App,dst:Log,status:Error->" + str(e).split(',')[0] + ",msg:\"log: " + current_time + " "+ current_date
+                    msg_gui="cmd:send,src:App,dst:Gui,status:"+status+",msg:\"log: " + current_time + " "+ current_date + ",Error (Check logs)"
+
+                app.send(bytes(msg_log,FORMAT))
+                app.send(bytes(msg_gui,FORMAT))
             
             elif((command[-1]).split()[0]=="Close"):
-                num = random.randrange(1,4)
+                num = random.randrange(1,3)
                 if(num==1 or num==2):
                     status="processed"
                 elif(num == 3):
                     status="busy"
 
+                pid = int((command[-1]).split()[-1])
+
                 try:
-                    pid = int((command[-1]).split()[-1])
                     os.kill(pid, signal.SIGTERM)
                     msg_log="cmd:send,src:App,dst:Log,status:"+status+",msg:\"log: " + current_time + " "+ current_date+ ",Closed " + str(pid)
-                    app.send(bytes(msg,FORMAT))
+                    msg_gui="cmd:send,src:App,dst:Gui,status:"+status+",msg:\"log: " + current_time + " "+ current_date+ ",Closed " + str(pid)
                 except Exception as e:
-                    msg_log="cmd:send,src:App,dst:Log,status:Error->" + str(e) + ",msg:\"log: " + current_time + " "+ current_date
-                    app.send(bytes(msg,FORMAT))
+                    msg_log="cmd:send,src:App,dst:Log,status:Error->" + str(e).split(',')[0] + ",msg:\"log: " + current_time + " "+ current_date
+                    msg_gui="cmd:send,src:App,dst:Gui,status:"+status+",msg:\"log: " + current_time + " "+ current_date + ",Error (Check logs)"
+
+                app.send(bytes(msg_log,FORMAT))
+                app.send(bytes(msg_gui,FORMAT))
 
         else:
             msg="cmd:send,src:App,dst:Log,status:Error,msg:\"log: " + current_time + " "+ current_date
