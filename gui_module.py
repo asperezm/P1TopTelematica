@@ -167,6 +167,9 @@ def start():
                     window.Element('-PROC-').update(values=(process_customizer(processes[cont:-1])))
                     cont += 1
                 processes = []
+            msg="cmd:close,src:Gui,dst:Log,status:"+"processed"+",msg:\"log: " + current_time + " "+ current_date
+            print("[MESSAGE] - "+msg)
+            gui.send(msg.encode(FORMAT))
 
         
         # Output the "uptime" statistic to a text field in the window
