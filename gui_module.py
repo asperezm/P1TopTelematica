@@ -26,9 +26,6 @@ def process_customizer(processes):
     return custom_processes
 
 
-
-
-
 def start():
     current_time = datetime.now().strftime("%H:%M:%S")
     current_date = datetime.today().strftime("%d/%m/%Y")
@@ -60,7 +57,7 @@ def start():
                 [sg.Output(size=(50,10))],
                 [sg.Text('', size=(50,1))],
                 [sg.HorizontalSeparator(pad=None)],
-                [sg.Button('Apagar sistema', button_color=('white', '#e04646'), key='Exit')]
+                [sg.Button('Apagar sistema', button_color=('white', '#e04646'))]
             ]
 
     
@@ -155,6 +152,22 @@ def start():
             window.Element('-LIST-').update(values=(files3))
             actualizar_directorios(window)
 
+        if event == 'Apagar sistema':
+            if len(processes) > 0:
+                cont = 0
+                for process in processes:
+                    print(cont)
+                    print(process)
+                    msg="cmd:send,src:Gui,dst:App,status:"+"processed"+",msg:\"log: " + current_time + " "+ current_date + ",Close " + process
+                    gui.send(msg.encode(FORMAT))
+                    print("[MESSAGE] - "+msg)
+                    p = gui.recv(HEADER).decode(FORMAT)
+                    print("[MESSAGE] - "+p)
+                    time.sleep(0.5)
+                    window.Element('-PROC-').update(values=(process_customizer(processes[cont:-1])))
+                    cont += 1
+                processes = []
+
         
         # Output the "uptime" statistic to a text field in the window
         window.Element('_DATE_').Update(str(datetime.now()-start_time))
@@ -163,6 +176,7 @@ def start():
     # Exiting the program
     window.Close()    # be sure and close the window before trying to exit the program
     print('Completed shutdown')
+
 
 def actualizar_directorios(window):
     current_time = datetime.now().strftime("%H:%M:%S")
