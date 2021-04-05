@@ -40,8 +40,7 @@ def start():
                 [sg.Text('Gestionar módulo aplicaciones', size=(50,2), justification='center')],
                 [   
                     sg.Button('Abrir', font=('Any 15'), button_color=('white','#3eb548')),
-                    sg.Button('Cerrar', font=('Any 15'), button_color=('white', '#3f56d1')), 
-                    sg.Button('Actualizar_proc', font=('Any 15'), button_color=('white', '#e04646'))
+                    sg.Button('Cerrar', font=('Any 15'), button_color=('white', '#3f56d1')),
                 ],
                 [sg.Text('', size=(50,1), justification='center')],
                 [sg.HorizontalSeparator(pad=None)],
@@ -119,9 +118,6 @@ def start():
                 gui.send(msgapp.encode(FORMAT))
                 print("[MESSAGE] close process - "+msg)
                 window.Element('-PROC-').update(values=(process_customizer(processes)))
-
-        if event == 'Actualizar_proc':
-            window.Element('-PROC-').update(values=(process_customizer(processes)))
 
         if event == 'Actualizar':
             msg="cmd:send,src:Gui,dst:Log,status:"+"none"+",msg:\"log: " + current_time + " "+ current_date + ",Info"
