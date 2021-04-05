@@ -1,4 +1,3 @@
-#Revisar __init__ para crear instancias de los módulos
 import socket
 import threading
 import subprocess
@@ -94,8 +93,5 @@ def start():
         print(f"[ACTIVE CONNECTIONS] {threading.activeCount()-1}")
 
     
-print("Server is starting")
+print("Kernel is starting")
 start()
-
-
-#w = sg()

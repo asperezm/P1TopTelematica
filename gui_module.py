@@ -116,21 +116,23 @@ def start():
             print("[MESSAGE] - "+msg)
             gui.send(bytes(msg,FORMAT))
             p = gui.recv(HEADER).decode(FORMAT)
+            print("[MESSAGE] - "+p)
             pid = (p.split(',')[-1]).split()[-1]
             processes.append(pid)
             window.Element('-PROC-').update(values=(process_customizer(processes)))
 
         if event == 'Cerrar':
             processes_list = values['-PROC-']
-            process = (processes_list[0].split(']')[0])[1:]
-
-            if processes_list:
-                msg="cmd:send,src:Gui,dst:Log,status:"+"processed"+",msg:\"log: " + current_time + " "+ current_date + ",Close " + process
-                msgapp="cmd:send,src:Gui,dst:App,status:"+"processed"+",msg:\"log: " + current_time + " "+ current_date + ",Close " + process
+            
+            if len(processes_list) == 1:
+                process = (processes_list[0].split(']')[0])[1:]
+                
+                msg="cmd:send,src:Gui,dst:App,status:"+"processed"+",msg:\"log: " + current_time + " "+ current_date + ",Close " + process
                 processes.remove(process)
                 gui.send(msg.encode(FORMAT))
-                gui.send(msgapp.encode(FORMAT))
-                print("[MESSAGE] close process - "+msg)
+                print("[MESSAGE] - "+msg)
+                p = gui.recv(HEADER).decode(FORMAT)
+                print("[MESSAGE] - "+p)
                 window.Element('-PROC-').update(values=(process_customizer(processes)))
 
         if event == 'Actualizar':
